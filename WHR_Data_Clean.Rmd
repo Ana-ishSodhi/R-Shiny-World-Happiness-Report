@@ -1,0 +1,328 @@
+---
+title: "World Happiness Report Data Clean"
+author: "Anish Nathu"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Library
+```{r}
+library(dplyr)
+library(tidyverse)
+```
+
+
+# Datasets
+```{r}
+WHR2015 <- read.csv("Data/2015.csv",sep=',', header = TRUE)
+head(WHR2015)
+```
+
+```{r}
+WHR2016 <- read.csv("Data/2016.csv",sep=',', header = TRUE)
+head(WHR2016)
+```
+
+```{r}
+WHR2017 <- read.csv("Data/2017.csv",sep=',', header = TRUE)
+head(WHR2017)
+```
+
+```{r}
+WHR2018 <- read.csv("Data/2018.csv",sep=',', header = TRUE)
+head(WHR2018)
+```
+
+```{r}
+WHR2019 <- read.csv("Data/2019.csv",sep=',', header = TRUE)
+head(WHR2019)
+```
+# Structure
+```{r}
+str(WHR2015)
+```
+
+```{r}
+str(WHR2016)
+```
+
+```{r}
+str(WHR2017)
+```
+
+```{r}
+str(WHR2018)
+```
+
+```{r}
+str(WHR2019)
+```
+
+
+# Summary
+```{r}
+summary(WHR2015)
+```
+
+```{r}
+summary(WHR2016)
+```
+
+```{r}
+summary(WHR2017)
+```
+
+```{r}
+summary(WHR2018)
+```
+
+```{r}
+summary(WHR2019)
+```
+
+# Dimensions
+```{r}
+dim(WHR2015)
+```
+
+```{r}
+dim(WHR2016)
+```
+
+```{r}
+dim(WHR2017)
+```
+
+```{r}
+dim(WHR2018)
+```
+
+```{r}
+dim(WHR2019)
+```
+
+# Column Names
+```{r}
+colnames(WHR2015)
+```
+
+```{r}
+colnames(WHR2016)
+```
+
+```{r}
+colnames(WHR2017)
+```
+
+```{r}
+colnames(WHR2018)
+```
+
+```{r}
+colnames(WHR2019)
+```
+
+# Adding, Removing and Renaming Columns to the Dataframe of all years
+```{r}
+clean_WHR2015 <- WHR2015 %>%
+  rename('Economy' = "Economy..GDP.per.Capita.",
+         'Rank' = "Happiness.Rank",
+         'Score' = "Happiness.Score",
+         'Economy' = "Economy..GDP.per.Capita.",
+         'Health' = "Health..Life.Expectancy.",
+         'Government' = 'Trust..Government.Corruption.',
+         'Dystopia' = "Dystopia.Residual") %>%
+  add_column('Year' = 2015) %>%
+  select(-'Standard.Error', -'Rank', -'Dystopia')
+
+head(clean_WHR2015)
+```
+
+```{r}
+clean_WHR2016 <- WHR2016 %>%
+  rename('Economy' = "Economy..GDP.per.Capita.",
+         'Rank' = "Happiness.Rank",
+         'Score' = "Happiness.Score",
+         'Economy' = "Economy..GDP.per.Capita.",
+         'Health' = "Health..Life.Expectancy.",
+         'Government' = 'Trust..Government.Corruption.',
+         'Dystopia' = "Dystopia.Residual") %>%
+  add_column('Year' = 2016) %>%
+  select(-'Lower.Confidence.Interval', -'Upper.Confidence.Interval', -'Rank', -'Dystopia')
+
+head(clean_WHR2016)
+```
+
+```{r}
+clean_WHR2017 <- WHR2017 %>%
+  rename('Economy' = "Economy..GDP.per.Capita.",
+         'Rank' = "Happiness.Rank",
+         'Score' = "Happiness.Score",
+         'Economy' = "Economy..GDP.per.Capita.",
+         'Health' = "Health..Life.Expectancy.",
+         'Government' = 'Trust..Government.Corruption.',
+         'Dystopia' = "Dystopia.Residual") %>%
+  add_column('Year' = 2017, 'Region' = NA) %>%
+  select(-'Whisker.high', -'Whisker.low',-'Rank', -'Dystopia')
+
+head(clean_WHR2017)
+```
+
+```{r}
+clean_WHR2018 <- WHR2018 %>%
+  rename ('Rank' = "Overall.rank",
+          'Country' = "Country.or.region",       
+          'Economy' = "GDP.per.capita",
+          'Family' = 'Social.support',
+          'Health' = "Healthy.life.expectancy",
+          'Freedom' = "Freedom.to.make.life.choices",
+          'Government' = "Perceptions.of.corruption") %>%
+  add_column ('Year' = 2018, 'Region' = NA ) %>%
+  select (-'Rank')
+
+head(clean_WHR2018)
+```
+
+```{r}
+clean_WHR2019 <- WHR2019 %>%
+  rename('Rank' = "Overall.rank",
+         'Country' = "Country.or.region",       
+         'Economy' = "GDP.per.capita",
+         'Family' = 'Social.support',
+         'Health' = "Healthy.life.expectancy",
+         'Freedom' = "Freedom.to.make.life.choices",
+         'Government' = "Perceptions.of.corruption") %>%
+  add_column ('Year' = 2019, 'Region' = NA) %>%
+  select (-'Rank')
+
+head(clean_WHR2019)
+```
+
+# Merging the dataframes together
+```{r}
+WHR_Cleaned <- rbind(clean_WHR2015, clean_WHR2016, clean_WHR2017, clean_WHR2018, clean_WHR2019) 
+head(WHR_Cleaned)
+```
+
+# Structure of Cleaned Dataframe
+```{r}
+str(WHR_Cleaned)
+```
+# Changing the Trust in Govt to numeric data type
+```{r}
+WHR_Cleaned$Government<-as.numeric(WHR_Cleaned$Government)
+sapply(WHR_Cleaned, mode)
+```
+
+# Summary of Cleaned Dataframe
+```{r}
+summary(WHR_Cleaned)
+```
+
+# Dimensions of Cleaned Dataframe
+```{r}
+dim(WHR_Cleaned)
+```
+
+# Column Names of Cleaned Dataframe
+```{r}
+colnames(WHR_Cleaned)
+```
+
+# Changing the Order of Cleaned Dataframe
+```{r}
+order <- c("Country","Region","Year", "Score","Economy",
+           "Family","Health", "Freedom","Government","Generosity")
+WHR_Cleaned <- WHR_Cleaned[, order]
+head(WHR_Cleaned)
+```
+
+# Difference in countries names over the years
+```{r}
+unique(sort(WHR_Cleaned$Country))
+```
+
+# All the different Regions in the dataframe
+```{r}
+unique(sort(WHR_Cleaned$Region))
+```
+
+# Changing countries names
+```{r}
+WHR_Cleaned$Country[WHR_Cleaned$Country=="Hong Kong S.A.R., China"] <- "Hong Kong"
+
+WHR_Cleaned$Country[WHR_Cleaned$Country=="Macedonia"] <- "North Macedonia"
+
+WHR_Cleaned$Country[WHR_Cleaned$Country=="North Cyprus"] <- "Northern Cyprus"
+
+WHR_Cleaned$Country[WHR_Cleaned$Country=="Somaliland region"] <- "Somalia"
+WHR_Cleaned$Country[WHR_Cleaned$Country=="Somaliland Region"] <- "Somalia"
+
+WHR_Cleaned$Country[WHR_Cleaned$Country=="Taiwan Province of China"] <- "Taiwan"
+
+WHR_Cleaned$Country[WHR_Cleaned$Country=="Trinidad & Tobago"] <- "Trinidad and Tobago"
+```
+
+
+# Number of NA's in the Cleaned Dataframe
+```{r}
+colSums(is.na(WHR_Cleaned))
+```
+
+# Fixing all the NA's values
+# First is the Government missing value
+```{r}
+WHR_Cleaned[is.na(WHR_Cleaned$Government),]
+```
+
+```{r}
+filter(WHR_Cleaned, Country == "United Arab Emirates")
+```
+# Imputed by using the mean of Government column.
+```{r}
+WHR_Cleaned$Government[is.na(WHR_Cleaned$Government)] <- mean(WHR_Cleaned$Government, na.rm = T)  
+filter(WHR_Cleaned, Country == "United Arab Emirates")
+```
+
+# Lastly adding all the missing values for the Region Column
+# First sort by Country and Year making it alphabetical and ordered year
+```{r}
+WHR_Cleaned <- arrange(WHR_Cleaned, Country, Year)
+WHR_Cleaned
+```
+
+```{r}
+WHR_Cleaned <- WHR_Cleaned %>%
+  group_by(Country) %>%
+  fill(Region, .direction = c('updown'))
+WHR_Cleaned
+```
+
+# Checking the Number of NA's in the Dataframe after Cleaning
+```{r}
+colSums(is.na(WHR_Cleaned))
+```
+
+# Finding and Fixing the last NA value
+```{r}
+WHR_Cleaned[is.na(WHR_Cleaned$Region),]
+```
+
+# Imputed by this: https://data.worldbank.org/country/ZG
+```{r}
+WHR_Cleaned$Region[is.na(WHR_Cleaned$Region)] <- "Sub-Saharan Africa"
+filter(WHR_Cleaned, Country == "Gambia")
+```
+
+# Final Check of the Number of NA's in the Dataframe after Cleaning
+```{r}
+colSums(is.na(WHR_Cleaned))
+```
+
+# Writing the cleaned csv for World Happiness Report for the years of 2015 to 2019
+```{r}
+write.csv(WHR_Cleaned, file = 'Data/WHR_Cleaned_Data.csv', row.names = FALSE)
+```
