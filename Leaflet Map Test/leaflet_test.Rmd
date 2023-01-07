@@ -1,7 +1,6 @@
 ---
 title: "dshf"
 author: "Anish Nathu"
-date: "2023-01-03"
 output: pdf_document
 ---
 
